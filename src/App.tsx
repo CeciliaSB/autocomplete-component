@@ -1,8 +1,7 @@
-import React, {SetStateAction, useEffect, useMemo, useState} from "react";
+import React, {FocusEventHandler, useEffect, useRef, useState} from "react";
 import TextInput from "./Components/TextInput/TextInput";
 import Options from "./Components/Options/Options";
 import './Styles/style.css'
-import {ReactComponent as MagnifyingIcon} from "./Assets/magnifying-glass-svgrepo-com (1).svg"
 import {SelectOption} from "./Components/Options/types/types";
 
 
@@ -31,26 +30,14 @@ const options = [
 
 ]
 
-// some function to filter the values
-// i need to check each option.label and see if it matches input
-// if it does, split the string into an array
-// so that your options are: {value : 21, label : ["The", " Matrix Reloaded"]}
-
 function App() {
-    const [title, setTitle] = useState('Auto-complete App');
-    const [inputValue, setInputValue] = useState(''); // This holds the input value
+    const [inputValue, setInputValue] = useState('');
     const [filteredOptions, setFilteredOptions] = useState<SelectOption[]>([]);
     const [selectedOption, setSelectedOption] = useState<SelectOption | undefined>(undefined);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    function handleButtonClick(event: any) {
-        console.log(event);
-        if (title === 'Hello') {
-            setTitle('Hola');
-        } else if (title === 'Hola') {
-            setTitle('Hello');
-        }
-    }
+
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             const filtered = options.filter(option =>
@@ -67,6 +54,7 @@ function App() {
 
     function handleChange(event: any) {
         setInputValue(event.target.value);
+        setIsOpen(true);
     }
 
     function handleSelectedOption(option: SelectOption | undefined) {
@@ -76,16 +64,37 @@ function App() {
         }
         setIsOpen(false);
     }
+    function clearInput() {
+        setInputValue('');
+        setSelectedOption(undefined);
+        setIsOpen(false);
+    }
+
+    const handleBlur: FocusEventHandler<HTMLDivElement> = (event) => {
+        if (containerRef.current && !containerRef.current.contains(event.relatedTarget as Node)) {
+            setIsOpen(false);
+        }
+    }
 
     return (
-        <div className='container'>
-            <h1 className='title'>{title}</h1>
-            <div className='search-wrapper'>
-                <TextInput value={inputValue} onChange={handleChange} setIsOpen={setIsOpen} className='search-bar' tabIndex={0}/>
-                <button onClick={handleButtonClick} className='search-btn'>
-                    <MagnifyingIcon />
-                </button>
-                <Options isOpen={isOpen} options={filteredOptions} onChange={handleSelectedOption} selected={selectedOption} />
+        <div className='container' >
+            <h1 className="title">Auto-complete App</h1>
+            <div className='search-wrapper' ref={containerRef} onBlur={handleBlur} tabIndex={-1}>
+                <TextInput
+                    value={inputValue}
+                    onChange={handleChange}
+                    setIsOpen={setIsOpen}
+                    clearInput={clearInput}
+                    className='search-bar'
+                    tabIndex={0}
+                />
+                <Options
+                    isOpen={isOpen}
+                    options={filteredOptions}
+                    onChange={handleSelectedOption}
+                    selected={selectedOption}
+                    query={inputValue}
+                />
             </div>
         </div>
     );
@@ -93,5 +102,4 @@ function App() {
 
 
 export default App;
-
 

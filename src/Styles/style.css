@@ -1,12 +1,20 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 .container {
     position: relative;
-    height: 35em;
+    align-self: center;
+    height: 38em;
     width: 40em;
     display: flex;
     align-items: center;
     flex-direction: column;
     padding: 0.9em;
-    margin: 5em;
+    margin: 4em;
     border-radius: 0.50em;
     background: rgba(218, 218, 218, 0.2);
 }
@@ -29,8 +37,9 @@
     background: white;
     font-size: 18px;
 }
+
 .search-bar {
-    width: 35em;
+    width: 32em;
     flex-grow: 1;
     border: none;
     outline: none;
@@ -40,22 +49,21 @@
 .search-bar:focus {
     border: royalblue;
 }
-.search-btn {
+.search-icon {
     position: absolute;
     right: 0.6em;
     top: 50%;
     transform: translateY(-50%);
     border: none;
     background-color: transparent;
-    cursor: pointer;
-    width: 2em;
-    height: 2em;
+    width: .8em;
+    height: .8em;
+    fill: #656363;
 }
 
-.search-btn svg {
+.search-icon svg {
     width: 100%;
     height: 100%;
-    fill: #656363;
 }
 .options-style{
     position: absolute;
@@ -89,4 +97,24 @@
 }
 .matching-key{
     background: rgba(218, 218, 218, 0.84);
+}
+.clear-btn-container{
+    top: 16%;
+    position: absolute;
+    right: 1.3em;
+    width: 2em;
+    height: 2em;
+}
+.clear-btn{
+    color: #777;
+    font-size: 26px;
+    font-weight: normal;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    right: .8em;
+}
+.clear-btn:focus,
+.clear-btn:hover {
+    color: #333;
 }
